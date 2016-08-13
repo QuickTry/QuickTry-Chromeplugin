@@ -4,9 +4,17 @@
   "description": "This extension lets you try out Stackoverflow snippets directly in your browser.",
   "version": "0.1",
   "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_icon": "icon.png"
   },
+ "content_scripts": [
+    {
+      "matches": ["http://stackoverflow.com/*"],
+      "css": ["core.css"],
+      "js": ["core.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ], 
   "permissions": [
     "activeTab"
   ]
