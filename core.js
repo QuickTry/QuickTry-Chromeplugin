@@ -11,7 +11,7 @@ var codeSnipetIndex = 0;
 document.addEventListener('mousemove', function (e) {
   var srcElement = e.target;
 
-  var button = createEditButton();
+  var button = createEditButton(changeToEditor);
 
   // Lets check if our underlying element is a DIV.
   if (srcElement.nodeName === 'PRE') {
@@ -39,16 +39,43 @@ document.addEventListener('mousemove', function (e) {
 
 function changeToEditor() {
   var code = reconstructSnippet(prevDOM.getElementsByTagName('code')[0]);
-  console.log(code);
-  var editor = createEditor(prevDOM);
-  editor.setValue(code, 0);
+
+  var quickTryWrapper = document.createElement('div');
+  quickTryWrapper.className = 'quicktry-wrapper';
+
+  var editorDiv = document.createElement('div');
+  editorDiv.className = 'quicktry-editor';
+  quickTryWrapper.appendChild(editorDiv);
+
+  var toolbarDiv = document.createElement('div');
+  toolbarDiv.className = 'quicktry-toolbar';
+  quickTryWrapper.appendChild(toolbarDiv);
+
+  var outputDiv = document.createElement('div');
+  outputDiv.className = 'quicktry-output';
+  quickTryWrapper.appendChild(outputDiv);
+
+  var parent = prevDOM.parentNode;
+  parent.replaceChild(quickTryWrapper, prevDOM);
+
+  var aceEditor = ace.edit(editorDiv);
+  aceEditor.setValue(code, 0);
 }
 
-function createEditButton() {
+function createEditButton(clickHandler) {
   var editButton = document.createElement('button');
   editButton.className = 'quicktry-edit-button';
-  editButton.addEventListener('click', changeToEditor, false);
+  editButton.addEventListener('click', clickHandler, false);
   var imgURL = chrome.extension.getURL("edit.png");
   editButton.setAttribute("style", "background-image: url(" + imgURL +")");
   return editButton;
+}
+
+function showOutput(outputDiv, text) {
+  outputDiv.setAttribute("style", "max-height: 200px;");
+  outputDiv.innerHTML = text;
+}
+
+function hideOutput(outputDiv) {
+  outputDiv.setAttribute("style", "max-height: 0px;");
 }

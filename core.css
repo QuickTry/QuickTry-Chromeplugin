@@ -16,3 +16,12 @@
 	min-height: 200px;
 	max-height: 600px;
 }
+
+.quicktry-output {
+	color: #39331A;
+	background-color: #eff0f1;
+	max-height: 0;
+	margin-bottom: 1em;
+	transition: max-height 0.7s;
+	overflow: hidden;
+}
