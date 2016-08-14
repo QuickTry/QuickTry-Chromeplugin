@@ -15,6 +15,7 @@
       "all_frames": true
     }
   ], 
+  "web_accessible_resources": ["edit.png"],
   "permissions": [
     "activeTab"
   ]

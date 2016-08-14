@@ -1,4 +1,14 @@
-.crx_mouse_visited {
+.quicktry-visited {
   background-color: #bcd5eb !important;
   outline: 1px solid #5166bb !important;
+}
+
+.quicktry-edit-button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: -50px;
+    right: 0;
+    z-index: 10000;
+    background-color: red;
 }
