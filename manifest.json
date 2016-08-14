@@ -10,11 +10,11 @@
     {
       "matches": ["http://stackoverflow.com/*"],
       "css": ["core.css"],
-      "js": ["core.js", "js/fetchcode.js"],
+      "js": ["utils.js", "core.js"],
       "run_at": "document_end",
       "all_frames": true
     }
-  ], 
+  ],
   "web_accessible_resources": ["edit.png"],
   "permissions": [
     "activeTab"

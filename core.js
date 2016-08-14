@@ -49,5 +49,15 @@ function findAncestor (el, cls) {
 }
 
 function changeToEditor() {
-	console.log(answerID);
+	var answerId = answerID;
+  var code = fetchCode('answers', answerId, onCodeLoadSuccess, onCodeLoadFailure)
+}
+
+function onCodeLoadSuccess(code) {
+  var editor = createEditor(prevDOM);
+  editor.value = code;
+}
+
+function onCodeLoadFailure() {
+  console.log('loading the code failed');
 }
