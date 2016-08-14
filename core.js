@@ -98,15 +98,6 @@ function reconstructSnippet(codeElement) {
   return $('<div/>').html(code).text();
 }
 
-function createEditor(element) {
-  var div = document.createElement("div");
-  div.className = 'quicktry-editor';
-  var parent = element.parentNode;
-  parent.replaceChild(div, element);
-  var editor = ace.edit(div);
-  return editor;
-}
-
 function runCode(code, language, parameters, success, failure) {
   $.ajax({
     type: "POST",
