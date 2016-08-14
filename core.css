@@ -23,7 +23,6 @@
 	max-height: 0;
 	margin-bottom: 1em;
 	transition: max-height 0.7s;
-	overflow: hidden;
 }
 
 .quicktry-toolbar .quicktry-run {
