@@ -49,8 +49,7 @@ function findAncestor (el, cls) {
 }
 
 function changeToEditor() {
-	var answerId = answerID;
-  var code = fetchCode('answers', answerId, onCodeLoadSuccess, onCodeLoadFailure)
+  var code = fetchCode('answers', answerID, onCodeLoadSuccess, onCodeLoadFailure)
 }
 
 function onCodeLoadSuccess(code) {
@@ -59,5 +58,5 @@ function onCodeLoadSuccess(code) {
 }
 
 function onCodeLoadFailure() {
-  console.log('loading the code failed');
+  console.log('Loading the code failed.');
 }
