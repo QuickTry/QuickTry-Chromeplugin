@@ -48,7 +48,7 @@ var QuickTry = function(code) {
 
   this.$languageSelector.append($('<option>', {value: 'Python2', text: 'Python2'}));
   this.$languageSelector.append($('<option>', {value: 'Python3', text: 'Python3'}));
-  this.$languageSelector.append($('<option>', {value: 'Javascript', text: 'Javascript'}));
+  this.$languageSelector.append($('<option>', {value: 'Nodejs', text: 'Javascript'}));
   this.$languageSelector.append($('<option>', {value: 'Go', text: 'Go'}));
   this.$languageSelector.change(this.onSelectLanguage.bind(this))
 
