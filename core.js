@@ -102,10 +102,10 @@ function createEditButton(clickHandler) {
 }
 
 function showOutput(outputDiv, text) {
-  outputDiv.setAttribute("style", "max-height: 200px;");
+  outputDiv.setAttribute("style", "max-height: 200px; overflow: scroll;");
   outputDiv.innerHTML = text;
 }
 
 function hideOutput(outputDiv) {
-  outputDiv.setAttribute("style", "max-height: 0px;");
+  outputDiv.setAttribute("style", "max-height: 0px; overflow: hidden;");
 }
