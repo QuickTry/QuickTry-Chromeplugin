@@ -24,7 +24,7 @@ function extractSnippets(body) {
   while(match = regexp.exec(body)) {
     matches.push(match[1]);
   }
-  return matches;
+  return matches[0];
 }
 
 function createEditor(element) {

@@ -5,6 +5,7 @@ var MOUSE_VISITED_CLASSNAME = 'quicktry-visited';
 var prevDOM = null;
 var questionID = null;
 var answerID = null;
+var codeSnipetIndex = 0;
 
 // Mouse listener for any move event on the current document.
 document.addEventListener('mousemove', function (e) {
@@ -34,8 +35,7 @@ document.addEventListener('mousemove', function (e) {
     if(srcElement.firstChild.className !== "quicktry-edit-button") {
     	srcElement.insertBefore(button, srcElement.firstChild);
     }
-    var answerParent = findAncestor(srcElement, "answer");
-    answerID = answerParent.dataset.answerid;
+    codeSnipetIndex = getCodeSnipetIndex(srcElement.parentNode, srcElement);
 
     // The current element is now the previous. So we can remove the class
     // during the next iteration.
@@ -48,6 +48,19 @@ function findAncestor (el, cls) {
     return el;
 }
 
+function getCodeSnipetIndex(parentNode, childNode) {
+	var count = 0;
+	for(var i = 0; i < parentNode.childNodes.length; i++) {
+		if(parentNode.childNodes[i].nodeName === "PRE") {
+			if(parentNode.childNodes[i] === childNode) {
+				return count;
+			}
+			count++;
+		}
+
+	}
+}
+
 function changeToEditor() {
   var code = fetchCode('answers', answerID, onCodeLoadSuccess, onCodeLoadFailure)
 }
@@ -56,10 +69,11 @@ function onCodeLoadSuccess(code) {
   var txt = document.createElement("textarea");
   txt.innerHTML = code;
   code = txt.value;
+  code = code.replace("/\r?\n/g", "\r\n")
   console.log(code);
   var editor = createEditor(prevDOM);
   var test = "Hello\nWorld";
-  editor.value = code;
+  editor.value = "function parseHtmlEnteties(str) {\n    return str.replace(/&#([0-9]{1,3});/gi, function(match, numStr) {\n        var num = parseInt(numStr, 10); // read num as normal number\n        return String.fromCharCode(num);\n    });\n}\n";
 }
 
 function onCodeLoadFailure() {
