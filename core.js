@@ -92,7 +92,6 @@ function changeToEditor() {
 	});
 
   aceEditor.setTheme("ace/theme/github");
-
   var PythonMode = ace.require("ace/mode/python").Mode;
   aceEditor.session.setMode(new PythonMode());
 
