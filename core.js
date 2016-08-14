@@ -30,10 +30,10 @@ function changeToEditor(element) {
     var runButton = $('<button class="quicktry-run">Run</button>');
     var languageSelector = $('<select class="quicktry-languageselector"></select>');
 
-    languageSelector.append($('<option>', {value: 'python2', text: 'Python2'}));
-    languageSelector.append($('<option>', {value: 'python3', text: 'Python3'}));
-    languageSelector.append($('<option>', {value: 'javascript', text: 'Javascript'}));
-    languageSelector.append($('<option>', {value: 'go', text: 'Go'}));
+    languageSelector.append($('<option>', {value: 'Python2', text: 'Python2'}));
+    languageSelector.append($('<option>', {value: 'Python3', text: 'Python3'}));
+    languageSelector.append($('<option>', {value: 'Javascript', text: 'Javascript'}));
+    languageSelector.append($('<option>', {value: 'Go', text: 'Go'}));
 
     toolbarDiv.append(runButton);
     toolbarDiv.append(languageSelector);
@@ -53,9 +53,9 @@ function changeToEditor(element) {
 
     languageSelector.change(function() {
       switch(this.value) {
-        case 'python2': case 'python3': aceEditor.session.setMode(new PythonMode()); break;
-        case 'javascript': aceEditor.session.setMode(new JavascriptMode()); break;
-        case 'go': aceEditor.session.setMode(new GoMode()); break;
+        case 'Python2': case 'Python3': aceEditor.session.setMode(new PythonMode()); break;
+        case 'Javascript': aceEditor.session.setMode(new JavascriptMode()); break;
+        case 'Go': aceEditor.session.setMode(new GoMode()); break;
       }
     });
 
@@ -63,7 +63,7 @@ function changeToEditor(element) {
 
     runButton.click(function() {
       output.hide();
-      runCode(aceEditor.getValue(), languageSelector.value, '', function(response) {
+      runCode(aceEditor.getValue(), languageSelector.val(), '', function(response) {
         text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
         if(response.status === 0) {
           output.info(text);
