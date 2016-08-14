@@ -3,7 +3,7 @@
 
 .quicktry-edit-button {
     position: absolute;
-    top: -32px;
+    top: 0;
     right: 0;
     z-index: 10000;
     background-size: 20px 20px;
