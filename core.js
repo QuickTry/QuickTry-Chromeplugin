@@ -63,7 +63,11 @@ function changeToEditor() {
   languageSelector.add(langJavascript);
 
   var langPython = document.createElement("option");
-  langPython.text = 'Python';
+  langPython.text = 'Python2';
+  languageSelector.add(langPython);
+
+  var langPython = document.createElement("option");
+  langPython.text = 'Python3';
   languageSelector.add(langPython);
 
   var langGo = document.createElement("option");
@@ -81,6 +85,16 @@ function changeToEditor() {
 
   var aceEditor = ace.edit(editorDiv);
   aceEditor.setValue(code, 0);
+
+  ace.require("ace/ext/language_tools");
+	aceEditor.setOptions({
+    enableBasicAutocompletion: true
+	});
+
+  aceEditor.setTheme("ace/theme/github");
+
+  var PythonMode = ace.require("ace/mode/python").Mode;
+  aceEditor.session.setMode(new PythonMode());
 
   runButton.addEventListener('click', function() {
     hideOutput(outputDiv);
