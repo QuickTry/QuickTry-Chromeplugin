@@ -8,9 +8,13 @@ var GoMode = ace.require("ace/mode/golang").Mode;
 
 $(document).ready(function() {
   $('pre').mouseenter(function() {
+    var snippet = $(this);
+
     var button = $('<button class="quicktry-edit-button">');
     button.css('background-image', 'url(' + chrome.extension.getURL("edit.png") +')');
-    button.click(replaceWithEditor(this));
+    button.click(function() {
+      runQuickTry(snippet);
+    });
 
     $(this).css('position', 'relative').prepend(button);
 
@@ -20,106 +24,110 @@ $(document).ready(function() {
   });
 });
 
-function replaceWithEditor(element) {
-  return function() {
-    var code = reconstructSnippet(element.getElementsByTagName('code')[0]);
+function runQuickTry(snippet) {
+  var code = $('code', snippet).text();
+  var quicktry = new QuickTry(code);
+  quicktry.replaceElement(snippet);
+  quicktry.onClose(function() {
+    snippet.css('display', 'block');
+    quicktry.destroy();
+  });
+}
 
-    var wrapper = $('<div class="quicktry-wrapper"></div>');
-    var editorDiv = $('<div class="quicktry-editor"></div>');
-    var toolbarDiv = $('<div class="quicktry-toolbar"></div>');
-    var outputDiv = $('<div class="quicktry-output"></div>');
+var QuickTry = function(code) {
+  this.$wrapper = $('<div class="quicktry-wrapper"></div>');
+  this.$editor = $('<div class="quicktry-editor"></div>');
+  this.$toolbar = $('<div class="quicktry-toolbar"></div>');
+  this.$output = $('<div class="quicktry-output"></div>');
 
-    var runButton = $('<button class="quicktry-run">Run</button>');
-    var languageSelector = $('<select class="quicktry-languageselector"></select>');
-    var closeButton = $('<button class="quicktry-close">Close</button>');
+  this.$runButton = $('<button class="quicktry-run">Run</button>');
+  this.$runButton.click(this.run.bind(this));
 
-    languageSelector.append($('<option>', {value: 'Python2', text: 'Python2'}));
-    languageSelector.append($('<option>', {value: 'Python3', text: 'Python3'}));
-    languageSelector.append($('<option>', {value: 'Javascript', text: 'Javascript'}));
-    languageSelector.append($('<option>', {value: 'Go', text: 'Go'}));
+  this.$languageSelector = $('<select class="quicktry-languageselector"></select>');
+  this.$closeButton = $('<button class="quicktry-close">Close</button>');
 
-    toolbarDiv.append(runButton);
-    toolbarDiv.append(languageSelector);
-    toolbarDiv.append(closeButton);
+  this.$languageSelector.append($('<option>', {value: 'Python2', text: 'Python2'}));
+  this.$languageSelector.append($('<option>', {value: 'Python3', text: 'Python3'}));
+  this.$languageSelector.append($('<option>', {value: 'Javascript', text: 'Javascript'}));
+  this.$languageSelector.append($('<option>', {value: 'Go', text: 'Go'}));
+  this.$languageSelector.change(this.onSelectLanguage.bind(this))
 
-    wrapper.append(editorDiv);
-    wrapper.append(toolbarDiv);
-    wrapper.append(outputDiv);
+  this.$toolbar.append(this.$runButton);
+  this.$toolbar.append(this.$languageSelector);
+  this.$toolbar.append(this.$closeButton);
 
-    $(element).css('display', 'none');
-    wrapper.insertAfter($(element));
+  this.$wrapper.append(this.$editor);
+  this.$wrapper.append(this.$toolbar);
+  this.$wrapper.append(this.$output);
 
-    var aceEditor = ace.edit(editorDiv[0]);
-    aceEditor.setValue(code, 0);
-    aceEditor.gotoLine(0, 0);
-    aceEditor.focus();
-    aceEditor.setTheme("ace/theme/github");
-    aceEditor.setOptions({
-      enableBasicAutocompletion: true,
-      minLines: 1,
-      maxLines: 20
-    });
+  this.ace = ace.edit(this.$editor[0]);
+  this.ace.setValue(code, 0);
+  this.ace.gotoLine(0, 0);
+  this.ace.focus();
+  this.ace.setTheme("ace/theme/github");
+  this.ace.setOptions({
+    enableBasicAutocompletion: true,
+    minLines: 1,
+    maxLines: 20
+  });
 
-    languageSelector.change(function() {
-      switch(this.value) {
-        case 'Python2': case 'Python3': aceEditor.session.setMode(new PythonMode()); break;
-        case 'Javascript': aceEditor.session.setMode(new JavascriptMode()); break;
-        case 'Go': aceEditor.session.setMode(new GoMode()); break;
-      }
-    });
+  this.output = new Output(this.$output);
+  this.runButton = new RunButton(this.$runButton);
+}
 
-    var output = new Output($(outputDiv));
-    var run = new RunButton($(runButton));
+QuickTry.prototype.replaceElement = function(element) {
+  $(element).css('display', 'none');
+  this.$wrapper.insertAfter(element);
+}
 
-    run.click(function() {
-      output.hide();
-      run.disable();
-
-      runCode(aceEditor.getValue(), languageSelector.val(), '', function(response) {
-        text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
-        if(response.status == -1) {
-          output.error(text);
-        } else if (response.status == 1) {
-          output.warn(text);
-        } else {
-          output.info(text);
-        }
-        run.enable();
-      }, function() {
-        output.error('Something went wrong. That\'s all we know.');
-        run.enable();
-      });
-    });
-
-    $(closeButton).click(function() {
-      wrapper.remove();
-      $(element).css('display', 'block');
-    });
+QuickTry.prototype.onSelectLanguage = function() {
+  switch(this.$languageSelector.val()) {
+    case 'Python2': case 'Python3': this.ace.session.setMode(new PythonMode()); break;
+    case 'Javascript': this.ace.session.setMode(new JavascriptMode()); break;
+    case 'Go': this.ace.session.setMode(new GoMode()); break;
   }
 }
 
-function reconstructSnippet(codeElement) {
-  var code = '';
-  var parts = codeElement.children;
-  for (var i = 0; i < parts.length; i++) {
-    code += parts[i].innerHTML;
-  }
-  return $('<div/>').html(code).text();
-}
-
-function runCode(code, language, parameters, success, failure) {
+QuickTry.prototype.run = function() {
+  this.output.hide();
+  this.runButton.disable();
   $.ajax({
     type: "POST",
     url: API_ENDPOINT,
     contentType : 'application/json',
     data: JSON.stringify({
-      code: code,
-      lang: language,
-      params: parameters
+      code: this.ace.getValue(),
+      lang: this.$languageSelector.val(),
+      params: ''
     }),
-    success: success,
-    error: failure
+    success: this.onRunSuccess.bind(this),
+    error: this.onRunFailure.bind(this)
   });
+}
+
+QuickTry.prototype.onRunSuccess = function(response) {
+  text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
+  if(response.status == -1) {
+    this.output.error(text);
+  } else if (response.status == 1) {
+    this.output.warn(text);
+  } else {
+    this.output.info(text);
+  }
+  this.runButton.enable();
+}
+
+QuickTry.prototype.onRunFailure = function() {
+  output.error('Something went wrong. That\'s all we know.');
+  this.runButton.enable();
+}
+
+QuickTry.prototype.onClose = function(handler) {
+  this.$closeButton.click(handler);
+}
+
+QuickTry.prototype.destroy = function() {
+  this.$wrapper.remove();
 }
 
 var Output = function($element) {
