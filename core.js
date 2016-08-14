@@ -58,10 +58,6 @@ function changeToEditor() {
   var languageSelector = document.createElement('select');
   toolbarDiv.appendChild(languageSelector);
 
-  var langJavascript = document.createElement("option");
-  langJavascript.text = 'Javascript';
-  languageSelector.add(langJavascript);
-
   var langPython = document.createElement("option");
   langPython.text = 'Python2';
   languageSelector.add(langPython);
@@ -69,6 +65,10 @@ function changeToEditor() {
   var langPython = document.createElement("option");
   langPython.text = 'Python3';
   languageSelector.add(langPython);
+
+  var langJavascript = document.createElement("option");
+  langJavascript.text = 'Javascript';
+  languageSelector.add(langJavascript);
 
   var langGo = document.createElement("option");
   langGo.text = 'Go';
@@ -96,12 +96,28 @@ function changeToEditor() {
   var PythonMode = ace.require("ace/mode/python").Mode;
   aceEditor.session.setMode(new PythonMode());
 
+  languageSelector.addEventListener("change", function() {
+  	var selectedLanguage = languageSelector.value;
+  	if(selectedLanguage === 'Python2' || selectedLanguage === 'Python3') {
+  		var PythonMode = ace.require("ace/mode/python").Mode;
+  		aceEditor.session.setMode(new PythonMode());
+  	} else if(selectedLanguage === 'Javascript') {
+  		var JavascriptMode = ace.require("ace/mode/javascript").Mode;
+  		aceEditor.session.setMode(new JavascriptMode());
+  	} else if(selectedLanguage === 'Go') {
+  		var GoMode = ace.require("ace/mode/golang").Mode;
+  		aceEditor.session.setMode(new GoMode());
+  	}
+  });
+
   runButton.addEventListener('click', function() {
     hideOutput(outputDiv);
-    runCode(aceEditor.getValue(), 'python', '', function(output) {
+    runCode(aceEditor.getValue(), languageSelector.value, '', function(output) {
       output = output.slice(1, -2);
       output = output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
       showOutput(outputDiv, output);
+    }, function() {
+    	console.log("Failed to execute code");
     })
   });
 }
