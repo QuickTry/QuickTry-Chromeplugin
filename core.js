@@ -110,13 +110,13 @@ function changeToEditor() {
   });
 
   runButton.addEventListener('click', function() {
-    hideOutput(outputDiv);
+    hideMessage(outputDiv);
     runCode(aceEditor.getValue(), languageSelector.value, '', function(output) {
       output = output.slice(1, -2);
       output = output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
-      showOutput(outputDiv, output);
+      showOutputMessage(outputDiv, output);
     }, function() {
-    	console.log("Failed to execute code");
+      showErrorMessage(outputDiv, 'Something went wrong. That\'s all we know.');
     })
   });
 }
@@ -130,11 +130,16 @@ function createEditButton(clickHandler) {
   return editButton;
 }
 
-function showOutput(outputDiv, text) {
-  outputDiv.setAttribute("style", "max-height: 200px; overflow: scroll;");
+function showOutputMessage(outputDiv, text) {
+  $(outputDiv).css('background-color', '#eff0f1').slideDown({duration: 200});
   outputDiv.innerHTML = text;
 }
 
-function hideOutput(outputDiv) {
-  outputDiv.setAttribute("style", "max-height: 0px; overflow: hidden;");
+function showErrorMessage(outputDiv, text) {
+  $(outputDiv).css('background-color', '#f5b3b3').slideDown({duration: 200});
+  outputDiv.innerHTML = text;
+}
+
+function hideMessage(outputDiv) {
+  $(outputDiv).slideUp({duration: 200});
 }

@@ -19,13 +19,15 @@
 
 .quicktry-output {
 	color: #39331A;
-	background-color: #eff0f1;
-	max-height: 0;
+	padding: .5em;
 	margin-bottom: 1em;
-	transition: max-height 0.7s;
+	display: none;
+}
+
+.quicktry-toolbar {
+	margin-bottom: 1em;
 }
 
 .quicktry-toolbar .quicktry-run {
 	margin-right: 1em;
-	margin-bottom: 1em;
 }
