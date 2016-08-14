@@ -28,7 +28,10 @@
       "all_frames": true
     }
   ],
-  "web_accessible_resources": ["edit.png"],
+  "web_accessible_resources": [
+    "edit.png",
+    "spin.gif"
+  ],
   "permissions": [
     "activeTab",
     "*://*/*"

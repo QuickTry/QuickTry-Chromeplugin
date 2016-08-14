@@ -62,9 +62,12 @@ function changeToEditor(element) {
     });
 
     var output = new Output($(outputDiv));
+    var run = new RunButton($(runButton));
 
-    runButton.click(function() {
+    run.click(function() {
       output.hide();
+      run.disable();
+
       runCode(aceEditor.getValue(), languageSelector.val(), '', function(response) {
         text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
         if(response.status == -1) {
@@ -74,8 +77,10 @@ function changeToEditor(element) {
         } else {
           output.info(text);
         }
+        run.enable();
       }, function() {
         output.error('Something went wrong. That\'s all we know.');
+        run.enable();
       });
     });
   }
@@ -105,4 +110,24 @@ Output.prototype.error = function(text) {
 
 Output.prototype.hide = function(text) {
   this.$element.slideUp({duration: 200});
+}
+
+var RunButton = function($button, output) {
+  this.$button = $button;
+}
+
+RunButton.prototype.enable = function() {
+  this.$button.html('Run');
+  this.$button.css('background-image', 'none');
+  this.$button.prop('disabled', false);
+}
+
+RunButton.prototype.disable = function() {
+  this.$button.html('');
+  this.$button.css('background-image', 'url(' + chrome.extension.getURL("spin.gif") +')');
+  this.$button.prop('disabled', true);
+}
+
+RunButton.prototype.click = function(handler) {
+  this.$button.click(handler);
 }

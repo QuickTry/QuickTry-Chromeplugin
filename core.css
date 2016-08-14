@@ -30,4 +30,7 @@
 
 .quicktry-toolbar .quicktry-run {
 	margin-right: 1em;
+	width: 5em;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
