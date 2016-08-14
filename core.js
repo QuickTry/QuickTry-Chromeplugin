@@ -10,12 +10,7 @@ var answerID = null;
 document.addEventListener('mousemove', function (e) {
   var srcElement = e.target;
 
-  var button = document.createElement('div');
-  button.className = 'quicktry-edit-button';
-  button.addEventListener('click', changeToEditor, false);
-  //var imgURL = chrome.extension.getURL("edit.png");
-  //console.log(imgURL);
-  //button.style.setProperty("background-image", "url(" + imgURL +")", "important");
+  var button = createEditButton();
 
   // Lets check if our underlying element is a DIV.
   if (srcElement.nodeName === 'PRE') {
@@ -48,3 +43,11 @@ function changeToEditor() {
   editor.setValue(code, 0);
 }
 
+function createEditButton() {
+  var editButton = document.createElement('button');
+  editButton.className = 'quicktry-edit-button';
+  editButton.addEventListener('click', changeToEditor, false);
+  var imgURL = chrome.extension.getURL("edit.png");
+  editButton.setAttribute("style", "background-image: url(" + imgURL +")");
+  return editButton;
+}
