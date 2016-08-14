@@ -10,7 +10,7 @@ $(document).ready(function() {
   $('pre').mouseenter(function() {
     var button = $('<button class="quicktry-edit-button">');
     button.css('background-image', 'url(' + chrome.extension.getURL("edit.png") +')');
-    button.click(changeToEditor(this));
+    button.click(replaceWithEditor(this));
 
     $(this).css('position', 'relative').prepend(button);
 
@@ -20,7 +20,7 @@ $(document).ready(function() {
   });
 });
 
-function changeToEditor(element) {
+function replaceWithEditor(element) {
   return function() {
     var code = reconstructSnippet(element.getElementsByTagName('code')[0]);
 
