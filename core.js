@@ -109,19 +109,21 @@ function changeToEditor() {
   	}
   });
 
+  var output = new Output($(outputDiv));
+
   runButton.addEventListener('click', function() {
-    hideMessage(outputDiv);
+    output.hide();
     runCode(aceEditor.getValue(), languageSelector.value, '', function(response) {
-      output = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
+      text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
       if(response.status === 0) {
-        showOutputMessage(outputDiv, output);
+        output.info(text);
       } else if (response.status === 1) {
-        showWarningMessage(outputDiv, output);
+        output.warn(text);
       } else {
-        showErrorMessage(outputDiv, output);
+        output.error(text);
       }
     }, function() {
-      showErrorMessage(outputDiv, 'Something went wrong. That\'s all we know.');
+      output.error('Something went wrong. That\'s all we know.');
     })
   });
 }
@@ -135,21 +137,28 @@ function createEditButton(clickHandler) {
   return editButton;
 }
 
-function showOutputMessage(outputDiv, text) {
-  $(outputDiv).css('background-color', '#eff0f1').slideDown({duration: 200});
-  outputDiv.innerHTML = text;
+var Output = function($element) {
+  this.$element = $element;
 }
 
-function showWarningMessage(outputDiv, text) {
-  $(outputDiv).css('background-color', '#f0e59e').slideDown({duration: 200});
-  outputDiv.innerHTML = text;
+Output.prototype.message = function(text, color) {
+  this.$element.css('background-color', color)
+    .html(text)
+    .slideDown({duration: 200});
 }
 
-function showErrorMessage(outputDiv, text) {
-  $(outputDiv).css('background-color', '#f5b3b3').slideDown({duration: 200});
-  outputDiv.innerHTML = text;
+Output.prototype.info = function(text) {
+  this.message(text, '#eff0f1');
 }
 
-function hideMessage(outputDiv) {
-  $(outputDiv).slideUp({duration: 200});
+Output.prototype.warn = function(text) {
+  this.message(text, '#f0e59e');
+}
+
+Output.prototype.error = function(text) {
+  this.message(text, '#f5b3b3');
+}
+
+Output.prototype.hide = function(text) {
+  this.$element.slideUp({duration: 200});
 }
