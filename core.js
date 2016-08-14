@@ -106,7 +106,7 @@ QuickTry.prototype.run = function() {
 }
 
 QuickTry.prototype.onRunSuccess = function(response) {
-  text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
+  text = response.output.replace(/(?:(\r\n)|(\r)|(\n))/g, '<br />');
   if(response.status == -1) {
     this.output.error(text);
   } else if (response.status == 1) {
