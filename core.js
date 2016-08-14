@@ -53,7 +53,12 @@ function changeToEditor() {
 }
 
 function onCodeLoadSuccess(code) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = code;
+  code = txt.value;
+  console.log(code);
   var editor = createEditor(prevDOM);
+  var test = "Hello\nWorld";
   editor.value = code;
 }
 
