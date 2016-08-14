@@ -83,7 +83,10 @@ function changeToEditor() {
   aceEditor.setValue(code, 0);
 
   runButton.addEventListener('click', function() {
+    hideOutput(outputDiv);
     runCode(aceEditor.getValue(), 'python', '', function(output) {
+      output = output.slice(1, -2);
+      output = output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
       showOutput(outputDiv, output);
     })
   });
