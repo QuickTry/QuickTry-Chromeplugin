@@ -15,7 +15,8 @@ $(document).ready(function() {
     $(this).css('position', 'relative').prepend(button);
 
   }).mouseleave(function() {
-    $('.quicktry-edit-button', this).css('position', 'static').remove();
+    $(this).css('position', 'static');
+    $('.quicktry-edit-button', this).remove();
   });
 });
 
@@ -23,13 +24,14 @@ function changeToEditor(element) {
   return function() {
     var code = reconstructSnippet(element.getElementsByTagName('code')[0]);
 
-    var quickTryWrapper = $('<div class="quicktry-wrapper"></div>');
+    var wrapper = $('<div class="quicktry-wrapper"></div>');
     var editorDiv = $('<div class="quicktry-editor"></div>');
     var toolbarDiv = $('<div class="quicktry-toolbar"></div>');
     var outputDiv = $('<div class="quicktry-output"></div>');
 
     var runButton = $('<button class="quicktry-run">Run</button>');
     var languageSelector = $('<select class="quicktry-languageselector"></select>');
+    var closeButton = $('<button class="quicktry-close">Close</button>');
 
     languageSelector.append($('<option>', {value: 'Python2', text: 'Python2'}));
     languageSelector.append($('<option>', {value: 'Python3', text: 'Python3'}));
@@ -38,12 +40,14 @@ function changeToEditor(element) {
 
     toolbarDiv.append(runButton);
     toolbarDiv.append(languageSelector);
+    toolbarDiv.append(closeButton);
 
-    quickTryWrapper.append(editorDiv);
-    quickTryWrapper.append(toolbarDiv);
-    quickTryWrapper.append(outputDiv);
+    wrapper.append(editorDiv);
+    wrapper.append(toolbarDiv);
+    wrapper.append(outputDiv);
 
-    $(element).replaceWith(quickTryWrapper);
+    $(element).css('display', 'none');
+    wrapper.insertAfter($(element));
 
     var aceEditor = ace.edit(editorDiv[0]);
     aceEditor.setValue(code, 0);
@@ -85,6 +89,11 @@ function changeToEditor(element) {
         output.error('Something went wrong. That\'s all we know.');
         run.enable();
       });
+    });
+
+    $(closeButton).click(function() {
+      wrapper.remove();
+      $(element).css('display', 'block');
     });
   }
 }

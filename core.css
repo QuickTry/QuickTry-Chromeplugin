@@ -27,6 +27,7 @@
 
 .quicktry-toolbar {
 	margin-bottom: 1em;
+	position: relative;
 }
 
 .quicktry-toolbar .quicktry-run {
@@ -34,4 +35,21 @@
 	width: 5em;
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+.quicktry-toolbar .quicktry-languageselector {
+	margin-right: 1em;
+}
+
+.quicktry-toolbar .quicktry-close {
+	display: inline;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	box-shadow: none;
+	min-height: 0;
+	color: #848d95;
+	text-decoration: underline;
+	font-size: .8em;
 }
