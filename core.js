@@ -6,7 +6,6 @@ var GoMode = ace.require("ace/mode/golang").Mode;
 
 $(document).ready(function() {
   $('pre').mouseenter(function() {
-
     var button = $('<button class="quicktry-edit-button">');
     button.css('background-image', 'url(' + chrome.extension.getURL("edit.png") +')');
     button.click(changeToEditor(this));
@@ -50,7 +49,9 @@ function changeToEditor(element) {
     aceEditor.focus();
     aceEditor.setTheme("ace/theme/github");
     aceEditor.setOptions({
-      enableBasicAutocompletion: true
+      enableBasicAutocompletion: true,
+      minLines: 1,
+      maxLines: 20
     });
 
     languageSelector.change(function() {
