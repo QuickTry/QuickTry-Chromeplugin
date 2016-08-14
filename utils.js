@@ -4,9 +4,7 @@ function reconstructSnippet(codeElement) {
   for (var i = 0; i < parts.length; i++) {
   	code += parts[i].innerHTML;
   }
-  var domParser = new DOMParser();
-  var codeDocument = domParser.parseFromString(code, "text/html");
-  return codeDocument.documentElement.textContent;
+  return $('<div/>').html(code).text();
 }
 
 function createEditor(element) {
