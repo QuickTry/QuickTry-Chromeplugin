@@ -65,16 +65,16 @@ function changeToEditor(element) {
       output.hide();
       runCode(aceEditor.getValue(), languageSelector.val(), '', function(response) {
         text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
-        if(response.status === 0) {
-          output.info(text);
-        } else if (response.status === 1) {
+        if(response.status == -1) {
+          output.error(text);
+        } else if (response.status == 1) {
           output.warn(text);
         } else {
-          output.error(text);
+          output.info(text);
         }
       }, function() {
         output.error('Something went wrong. That\'s all we know.');
-      })
+      });
     });
   }
 }
