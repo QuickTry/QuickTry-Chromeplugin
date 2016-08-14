@@ -23,27 +23,25 @@ function runCode(code, language, parameters, success, failure) {
   var request = new XMLHttpRequest();
 
   request.onreadystatechange = function() {
-  if (request.readyState == 4 && request.status == 200) {
-    var responseText = request.responseText;
-    success(responseText);
-  } else {
-    failure();
-  }
-};
+    if (request.readyState == 4) {
+      if(request.status == 200) {
+        var responseText = request.responseText;
+        success(responseText);
+      } else {
+        failure();
+      }
+    }
+  };
 
   if ("withCredentials" in request) {
-
     // Check if the XMLHttpRequest object has a "withCredentials" property.
     // "withCredentials" only exists on XMLHTTPRequest2 objects.
     request.open("POST", url, true);
-
   } else if (typeof XDomainRequest != "undefined") {
-
     // Otherwise, check if XDomainRequest.
     // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
     request = new XDomainRequest();
     request.open("GET", url);
-
   }
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(JSON.stringify({code: code, lang: language, params: parameters}));

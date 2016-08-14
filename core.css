@@ -25,3 +25,8 @@
 	transition: max-height 0.7s;
 	overflow: hidden;
 }
+
+.quicktry-toolbar .quicktry-run {
+	margin-right: 1em;
+	margin-bottom: 1em;
+}

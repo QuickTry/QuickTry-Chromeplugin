@@ -49,6 +49,27 @@ function changeToEditor() {
 
   var toolbarDiv = document.createElement('div');
   toolbarDiv.className = 'quicktry-toolbar';
+
+  var runButton = document.createElement('button');
+  runButton.className = 'quicktry-run';
+  runButton.innerHTML = 'Run';
+  toolbarDiv.appendChild(runButton);
+
+  var languageSelector = document.createElement('select');
+  toolbarDiv.appendChild(languageSelector);
+
+  var langJavascript = document.createElement("option");
+  langJavascript.text = 'Javascript';
+  languageSelector.add(langJavascript);
+
+  var langPython = document.createElement("option");
+  langPython.text = 'Python';
+  languageSelector.add(langPython);
+
+  var langGo = document.createElement("option");
+  langGo.text = 'Go';
+  languageSelector.add(langGo);
+
   quickTryWrapper.appendChild(toolbarDiv);
 
   var outputDiv = document.createElement('div');
@@ -60,6 +81,12 @@ function changeToEditor() {
 
   var aceEditor = ace.edit(editorDiv);
   aceEditor.setValue(code, 0);
+
+  runButton.addEventListener('click', function() {
+    runCode(aceEditor.getValue(), 'python', '', function(output) {
+      showOutput(outputDiv, output);
+    })
+  });
 }
 
 function createEditButton(clickHandler) {
