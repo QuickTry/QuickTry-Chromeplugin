@@ -1,7 +1,12 @@
 $(document).ready(function() {
   $('pre').mouseenter(function() {
-    var button = createEditButton(changeToEditor(this));
+
+    var button = $('<button class="quicktry-edit-button">');
+    button.css('background-image', 'url(' + chrome.extension.getURL("edit.png") +')');
+    button.click(changeToEditor(this));
+
     $(this).css('position', 'relative').prepend(button);
+
   }).mouseleave(function() {
     $('.quicktry-edit-button', this).css('position', 'static').remove();
   });
@@ -98,13 +103,6 @@ function changeToEditor(element) {
       })
     });
   }
-}
-
-function createEditButton(clickHandler) {
-  var button = $('<button class="quicktry-edit-button">');
-  button.css('background-image', 'url(' + chrome.extension.getURL("edit.png") +')');
-  button.click(clickHandler);
-  return button;
 }
 
 var Output = function($element) {
