@@ -46,6 +46,8 @@ function changeToEditor(element) {
 
     var aceEditor = ace.edit(editorDiv[0]);
     aceEditor.setValue(code, 0);
+    aceEditor.gotoLine(0, 0);
+    aceEditor.focus();
     aceEditor.setTheme("ace/theme/github");
     aceEditor.setOptions({
       enableBasicAutocompletion: true
