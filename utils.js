@@ -26,7 +26,7 @@ function runCode(code, language, parameters, success, failure) {
     if (request.readyState == 4) {
       if(request.status == 200) {
         var responseText = request.responseText;
-        success(responseText);
+        success(JSON.parse(responseText));
       } else {
         failure();
       }

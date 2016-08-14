@@ -111,10 +111,15 @@ function changeToEditor() {
 
   runButton.addEventListener('click', function() {
     hideMessage(outputDiv);
-    runCode(aceEditor.getValue(), languageSelector.value, '', function(output) {
-      output = output.slice(1, -2);
-      output = output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
-      showOutputMessage(outputDiv, output);
+    runCode(aceEditor.getValue(), languageSelector.value, '', function(response) {
+      output = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
+      if(response.status === 0) {
+        showOutputMessage(outputDiv, output);
+      } else if (response.status === 1) {
+        showWarningMessage(outputDiv, output);
+      } else {
+        showErrorMessage(outputDiv, output);
+      }
     }, function() {
       showErrorMessage(outputDiv, 'Something went wrong. That\'s all we know.');
     })
@@ -132,6 +137,11 @@ function createEditButton(clickHandler) {
 
 function showOutputMessage(outputDiv, text) {
   $(outputDiv).css('background-color', '#eff0f1').slideDown({duration: 200});
+  outputDiv.innerHTML = text;
+}
+
+function showWarningMessage(outputDiv, text) {
+  $(outputDiv).css('background-color', '#f0e59e').slideDown({duration: 200});
   outputDiv.innerHTML = text;
 }
 
