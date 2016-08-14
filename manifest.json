@@ -23,6 +23,7 @@
   ],
   "web_accessible_resources": ["edit.png"],
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "*://*/*"
   ]
 }
