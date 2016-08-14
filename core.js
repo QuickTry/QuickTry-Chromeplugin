@@ -34,8 +34,6 @@ document.addEventListener('mousemove', function (e) {
     if(srcElement.firstChild.className !== "quicktry-edit-button") {
     	srcElement.insertBefore(button, srcElement.firstChild);
     }
-    var answerParent = findAncestor(srcElement, "answer");
-    answerID = answerParent.dataset.answerid;
 
     // The current element is now the previous. So we can remove the class
     // during the next iteration.
@@ -43,20 +41,10 @@ document.addEventListener('mousemove', function (e) {
   }
 }, false);
 
-function findAncestor (el, cls) {
-    while ((el = el.parentElement) && !el.classList.contains(cls));
-    return el;
-}
-
 function changeToEditor() {
-  var code = fetchCode('answers', answerID, onCodeLoadSuccess, onCodeLoadFailure)
-}
-
-function onCodeLoadSuccess(code) {
+  var code = reconstructSnippet(prevDOM.getElementsByTagName('code')[0]);
+  console.log(code);
   var editor = createEditor(prevDOM);
-  editor.value = code;
+  editor.setValue(code, 0);
 }
 
-function onCodeLoadFailure() {
-  console.log('Loading the code failed.');
-}

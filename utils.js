@@ -1,36 +1,19 @@
-// type might be 'answers' or 'questions'
-function fetchCode(type, id, success, failure) {
-  var url = 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?site=stackoverflow&filter=withbody'
-  var request = new XMLHttpRequest();
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      if (request.status == 200) {
-        var responseText = request.responseText;
-        var snippets = extractSnippets(responseText);
-        success(snippets);
-      } else {
-        failure();
-      }
-    }
-  };
-  request.open("GET", url, true);
-  request.send();
-}
-
-function extractSnippets(body) {
-  var regexp = /<code>(.*?)<\/code>/ig
-  var matches = [];
-  var match;
-  while(match = regexp.exec(body)) {
-    matches.push(match[1]);
+function reconstructSnippet(codeElement) {
+  var code = '';
+  var parts = codeElement.children;
+  for (var i = 0; i < parts.length; i++) {
+  	code += parts[i].innerHTML;
   }
-  return matches;
+  var domParser = new DOMParser();
+  var codeDocument = domParser.parseFromString(code, "text/html");
+  return codeDocument.documentElement.textContent;
 }
 
 function createEditor(element) {
-  var textarea = document.createElement("textarea");
-  textarea.className = 'quicktry-editor';
+  var div = document.createElement("div");
+  div.className = 'quicktry-editor';
   var parent = element.parentNode;
-  parent.replaceChild(textarea, element);
-  return textarea;
+  parent.replaceChild(div, element);
+  var editor = ace.edit(div);
+  return editor;
 }

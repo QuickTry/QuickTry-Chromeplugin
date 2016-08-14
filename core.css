@@ -1,6 +1,4 @@
 .quicktry-visited {
-  background-color: #bcd5eb !important;
-  outline: 1px solid #5166bb !important;
 }
 
 .quicktry-edit-button {
@@ -14,9 +12,7 @@
 }
 
 .quicktry-editor {
-	width: calc(100% - 14px);
-	padding: 7px;
-	margin: 0;
-	min-height: 100px;
+	margin-bottom: 1em;
+	min-height: 200px;
 	max-height: 600px;
 }
