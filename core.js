@@ -1,3 +1,9 @@
+ace.require("ace/ext/language_tools");
+
+var PythonMode = ace.require("ace/mode/python").Mode;
+var JavascriptMode = ace.require("ace/mode/javascript").Mode;
+var GoMode = ace.require("ace/mode/golang").Mode;
+
 $(document).ready(function() {
   $('pre').mouseenter(function() {
 
@@ -16,78 +22,46 @@ function changeToEditor(element) {
   return function() {
     var code = reconstructSnippet(element.getElementsByTagName('code')[0]);
 
-    var quickTryWrapper = document.createElement('div');
-    quickTryWrapper.className = 'quicktry-wrapper';
+    var quickTryWrapper = $('<div class="quicktry-wrapper"></div>');
+    var editorDiv = $('<div class="quicktry-editor"></div>');
+    var toolbarDiv = $('<div class="quicktry-toolbar"></div>');
+    var outputDiv = $('<div class="quicktry-output"></div>');
 
-    var editorDiv = document.createElement('div');
-    editorDiv.className = 'quicktry-editor';
-    quickTryWrapper.appendChild(editorDiv);
+    var runButton = $('<button class="quicktry-run">Run</button>');
+    var languageSelector = $('<select class="quicktry-languageselector"></select>');
 
-    var toolbarDiv = document.createElement('div');
-    toolbarDiv.className = 'quicktry-toolbar';
+    languageSelector.append($('<option>', {value: 'python2', text: 'Python2'}));
+    languageSelector.append($('<option>', {value: 'python3', text: 'Python3'}));
+    languageSelector.append($('<option>', {value: 'javascript', text: 'Javascript'}));
+    languageSelector.append($('<option>', {value: 'go', text: 'Go'}));
 
-    var runButton = document.createElement('button');
-    runButton.className = 'quicktry-run';
-    runButton.innerHTML = 'Run';
-    toolbarDiv.appendChild(runButton);
+    toolbarDiv.append(runButton);
+    toolbarDiv.append(languageSelector);
 
-    var languageSelector = document.createElement('select');
-    toolbarDiv.appendChild(languageSelector);
+    quickTryWrapper.append(editorDiv);
+    quickTryWrapper.append(toolbarDiv);
+    quickTryWrapper.append(outputDiv);
 
-    var langPython = document.createElement("option");
-    langPython.text = 'Python2';
-    languageSelector.add(langPython);
+    $(element).replaceWith(quickTryWrapper);
 
-    var langPython = document.createElement("option");
-    langPython.text = 'Python3';
-    languageSelector.add(langPython);
-
-    var langJavascript = document.createElement("option");
-    langJavascript.text = 'Javascript';
-    languageSelector.add(langJavascript);
-
-    var langGo = document.createElement("option");
-    langGo.text = 'Go';
-    languageSelector.add(langGo);
-
-    quickTryWrapper.appendChild(toolbarDiv);
-
-    var outputDiv = document.createElement('div');
-    outputDiv.className = 'quicktry-output';
-    quickTryWrapper.appendChild(outputDiv);
-
-    var parent = element.parentNode;
-    parent.replaceChild(quickTryWrapper, element);
-
-    var aceEditor = ace.edit(editorDiv);
+    var aceEditor = ace.edit(editorDiv[0]);
     aceEditor.setValue(code, 0);
-
-    ace.require("ace/ext/language_tools");
+    aceEditor.setTheme("ace/theme/github");
     aceEditor.setOptions({
       enableBasicAutocompletion: true
     });
 
-    aceEditor.setTheme("ace/theme/github");
-    var PythonMode = ace.require("ace/mode/python").Mode;
-    aceEditor.session.setMode(new PythonMode());
-
-    languageSelector.addEventListener("change", function() {
-      var selectedLanguage = languageSelector.value;
-      if(selectedLanguage === 'Python2' || selectedLanguage === 'Python3') {
-        var PythonMode = ace.require("ace/mode/python").Mode;
-        aceEditor.session.setMode(new PythonMode());
-      } else if(selectedLanguage === 'Javascript') {
-        var JavascriptMode = ace.require("ace/mode/javascript").Mode;
-        aceEditor.session.setMode(new JavascriptMode());
-      } else if(selectedLanguage === 'Go') {
-        var GoMode = ace.require("ace/mode/golang").Mode;
-        aceEditor.session.setMode(new GoMode());
+    languageSelector.change(function() {
+      switch(this.value) {
+        case 'python2': case 'python3': aceEditor.session.setMode(new PythonMode()); break;
+        case 'javascript': aceEditor.session.setMode(new JavascriptMode()); break;
+        case 'go': aceEditor.session.setMode(new GoMode()); break;
       }
     });
 
     var output = new Output($(outputDiv));
 
-    runButton.addEventListener('click', function() {
+    runButton.click(function() {
       output.hide();
       runCode(aceEditor.getValue(), languageSelector.value, '', function(response) {
         text = response.output.replace(/(?:(\\r\\n)|(\\r)|(\\n))/g, '<br />');
