@@ -20,8 +20,6 @@
         "third_party/ace/src/mode-javascript.js",
         "third_party/ace/src/mode-golang.js",
         "third_party/ace/src/ext-language_tools.js",
-
-        "utils.js",
         "core.js"
       ],
       "run_at": "document_end",
