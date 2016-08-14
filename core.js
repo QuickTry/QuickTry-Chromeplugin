@@ -5,6 +5,7 @@ var MOUSE_VISITED_CLASSNAME = 'quicktry-visited';
 var prevDOM = null;
 var questionID = null;
 var answerID = null;
+var codeSnipetIndex = 0;
 
 // Mouse listener for any move event on the current document.
 document.addEventListener('mousemove', function (e) {
